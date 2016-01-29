@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+	<title>字数统计</title>
+	<script type="text/javascript" src="validate/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript">
+		function wordCount(obj,tipId){
+			$(obj).keyup(function(){
+				$("#"+tipId).text($.trim($(this).val()).length);
+			});
+		}
+	</script>
+</head>
+<body>
+	<!--字数统计-->
+	<div style="width: 80%;">
+	<textarea style="width: 80%; height: 200px;" onkeyup="wordCount(this,'wordCount')"></textarea>
+	<div align="right"><em id="wordCount" style="color: #ff0000;">0</em>/200</div>
+	</div>
+</body>
+</html>

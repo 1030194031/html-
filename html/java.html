@@ -1,0 +1,364 @@
+<!---
+java学习：  http://www.runoob.com/java/java-examples.html
+
+plsvn::  http://subclipse.tigris.org/update_1.8.x 
+Maven::   http://download.eclipse.org/m2e-wtp/releases/juno/
+Tomcat::    server.xml 配置路径 <Context debug="true" docBase="D:/workspace/cms_naite/WebRoot" path="/" reloadable="false"/>
+
+Maven  jar pom 网站
+search.maven.org
+
+eclipse中通过search打开第二个文件时 第一个文件就自己关闭了  解决办法
+window-preferences-General-Search
+找到第一行的一个选项  Reuse editors to show matches
+他的意思是说在同一个编辑里面显示匹配的文件，如果后面有符合条件的了自然就把前一个给覆盖了，我们把前面的对勾去掉就是在不同的编辑里面显示，就OK了。
+
+使用lombok检测不到getter setter方法
+将项目中的lombok.jar双击添加到ecplise 重启
+
+项目tomcat启动配
+<Context debug="true" docBase="D:/workspace/demo_cms/WebRoot" path="/" reloadable="false"/>
+
+如果刚修改pom.xml文件  程序报错的话  可以右键maven==>update project==>ok
+-->
+
+<!--
+注解@SuppressWarnings("unchecked")表示不显示使用了不赞成使用的类或方法时的警告
+-->
+
+
+<!--java根据id串一次查询专业信息   仅适用于in查询数据全时  不全最好不用-->
+/////////CourseServiceImpl课程接口
+List<Long> list = new ArrayList<Long>();
+for(CourseDto courseDto:courseDtos){
+	list.add(courseDto.getId());
+}
+	Map<Long,SubjectMajor> subjectMajors=subjectMajorService.querySubjectMajorByIds(list);
+	if(ObjectUtils.isNotNull(subjectMajors)){
+		for(CourseDto courseDto:courseDtos){
+			courseDto.setSubjectMajor(subjectMajors.get(courseDto.getId()));
+		}
+	}
+}
+
+////SubjectMajorDaoImpl专业接口
+Map<Long, SubjectMajor> result = new HashMap<Long,SubjectMajor>();
+List<SubjectMajor> subjectMajorList= selectList("SubjectMajorMapper.querySubjectMajorByIds", list);
+int i=0;
+for(SubjectMajor s:subjectMajorList){
+	result.put(list.get(i), s);
+	i++;
+}
+return result;
+
+////////Mapper方法（in查询根据id串顺序排序）
+<select id="querySubjectMajorByIds" parameterType="java.util.List" resultMap="SubjectMajorResultMap">
+	select <include refid="edu_subject_major_columns"/>, edu_major.name as majorName,sys_subject.SUBJECT_NAME as subjectName
+	from  edu_subject_major
+	left join edu_major on edu_subject_major.major_id=edu_major.id
+	left join sys_subject on edu_subject_major.subject_id=sys_subject.subject_id
+	left join  edu_course_subject on edu_course_subject.subject_id=edu_subject_major.id
+	where course_id in
+	<foreach collection="list" item="item" separator="," open="("
+		close=")">
+		#{item}
+	</foreach>
+	 order by field(course_id,
+	 <foreach collection="list" item="item" separator=",">
+	 #{item}
+	 </foreach>
+	 );
+</select>
+//mysql field()自定义排序函数
+
+<!--数组转集合-->
+List<String> list = Arrays.asList(name);
+<!--集合转化为数组：-->
+Object[] listArray = list.toArray();
+<!--java打乱数组集合顺序-->
+Collections.shuffle(recommandList);
+<!--获得数组集合中最大的-->
+double max = Collections.max(list);
+<!--获取数组集合中最小的-->
+double min = Collections.max(list);
+<!--查询2在array数组中的位置-->
+Arrays.binarySearch(array, 2);
+<!--数组合并-->
+public class Main {
+   public static void main(String args[]) {
+      String a[] = { "A", "E", "I" };
+      String b[] = { "O", "U" };
+      List list = new ArrayList(Arrays.asList(a));
+      list.addAll(Arrays.asList(b));
+      Object[] c = list.toArray();
+      System.out.println(Arrays.toString(c));
+   }
+}
+<!--数组删除-->
+objArray.clear();
+objArray.remove(1);
+<!--数组是否包含-->
+public class Main {
+   public static void main(String[] args)  {
+      ArrayList objArray = new ArrayList();
+      ArrayList objArray2 = new ArrayList();
+      objArray2.add(0,"common1");
+      objArray2.add(1,"common2");
+      objArray2.add(2,"notcommon");
+      objArray2.add(3,"notcommon1");
+      objArray.add(0,"common1");
+      objArray.add(1,"common2");
+      System.out.println("objArray 的数组元素："+objArray);
+      System.out.println("objArray2 的数组元素："+objArray2);
+      System.out.println("objArray 是否包含字符串common2? ： "
+      +objArray.contains("common1"));
+      System.out.println("objArray2 是否包含数组 objArray? ："
+      +objArray2.contains(objArray) );
+   }
+}
+<!--数组差集-->
+public class Main {
+   public static void main(String[] args)  {
+      ArrayList objArray = new ArrayList();
+      ArrayList objArray2 = new ArrayList();
+      objArray2.add(0,"common1");
+      objArray2.add(1,"common2");
+      objArray2.add(2,"notcommon");
+      objArray2.add(3,"notcommon1");
+      objArray.add(0,"common1");
+      objArray.add(1,"common2");
+      objArray.add(2,"notcommon2");
+      System.out.println("array1 的元素" +objArray);
+      System.out.println("array2 的元素" +objArray2);
+      objArray.removeAll(objArray2);
+      System.out.println("array1 与 array2 数组差集为："+objArray);
+   }
+}
+<!--数组交集-->
+public class Main {
+   public static void main(String[] args)  {
+      ArrayList objArray = new ArrayList();
+      ArrayList objArray2 = new ArrayList();
+      objArray2.add(0,"common1");
+      objArray2.add(1,"common2");
+      objArray2.add(2,"notcommon");
+      objArray2.add(3,"notcommon1");
+      objArray.add(0,"common1");
+      objArray.add(1,"common2");
+      objArray.add(2,"notcommon2");
+      System.out.println("array1 数组元素："+objArray);
+      System.out.println("array2 数组元素："+objArray2);
+      objArray.retainAll(objArray2);
+      System.out.println("array2 & array1 数组交集为："+objArray);
+   }
+}
+<!--判断数组是否相等-->
+public class Main {
+   public static void main(String[] args) throws Exception {
+      int[] ary = {1,2,3,4,5,6};
+      int[] ary1 = {1,2,3,4,5,6};
+      int[] ary2 = {1,2,3,4};
+      System.out.println("数组 ary 是否与数组 ary1相等? ："
+      +Arrays.equals(ary, ary1));
+      System.out.println("数组 ary 是否与数组 ary2相等? ："
+      +Arrays.equals(ary, ary2));
+   }
+}
+
+<!--json工具的使用-->
+<!--json处理集合中有集合-->
+public static void main(String[] args) {        
+	String jsonStr = "{'head':{'version':'1'},'dataList':{'resCode':'ss','list':[{'name':'file1','type':'0'},{'name':'file2','type':'1'}]}}";        
+	JSONObject  dataJson=JSONObject.fromObject(jsonStr);                
+	JSONObject  dataList=dataJson.getJSONObject("dataList");                
+	JSONArray list=dataList.getJSONArray("list");                
+	JSONObject info=list.getJSONObject(1);                
+	String name=info.getString("name");                
+	String type=info.getString("type");                 
+	System.out.println(name+type);        
+	/String name = jsonObject.getString("name");       
+	//System.out.println(name);    
+}
+<!--集合转json -->
+public String querFavouriteJob(long userId) {
+	// TODO Auto-generated method stub
+	Job query=new Job();
+	query.setUserId(userId);
+	PageEntity page=new PageEntity();
+	page.setPageSize(50);
+	List<Job> list=jobService.queryFavourite(query, page);
+	return new Gson().toJson(list);
+}
+<!--json 转换map-->
+Gson gson = new Gson()
+Map<String,String> userMap = gson.fromJson(map.toString(), new TypeToken<Map<String,String>>(){}.getType());
+<!--json 转 Map 集合-->
+Gson gson = new Gson()
+JsonArray array = jsonParser.parse(list).getAsJsonArray();
+List<Map<String,String>> orderList = gson.fromJson(array, new TypeToken<List<Map<String,String>>>(){}.getType());
+
+<!--springMvc 参数是否必须填写-->
+@RequestParam(value="answerId",required=false) Long answerId   
+
+<!--对txt的操作-->
+///读取写入txt文件
+@RequestMapping("/toRecruit")
+public ModelAndView toRecruit() {
+	ModelAndView model = new ModelAndView(toAddRecruit);
+	try {
+		String encoding="UTF-8";
+		File file=new File(CommonConstants.recruitPath);
+		if(file.isFile() && file.exists()){ //判断文件是否存在
+			InputStreamReader read = new InputStreamReader(
+			new FileInputStream(file),encoding);//考虑到编码格式
+			BufferedReader bufferedReader = new BufferedReader(read);
+			String lineTxt = "";
+			String content="";
+			while((lineTxt = bufferedReader.readLine()) != null){
+				content+=lineTxt;
+			}
+			model.addObject("lineTxt",content);
+			read.close();
+		}
+	} catch (Exception e) {
+		logger.error("toRecruit()--------------error",e);
+	}
+	return model;
+}
+////创建txt
+@RequestMapping("/addRecruit")
+public ModelAndView addRecruit(@RequestParam("info") String info) {
+	ModelAndView model = new ModelAndView();
+	 BufferedWriter writer=null;
+	 OutputStreamWriter write =null;
+	try{
+		model.setViewName("redirect:/admin/resume/toRecruit");
+		File f = new File(CommonConstants.recruitPath);      
+		write = new OutputStreamWriter(new FileOutputStream(f),"UTF-8");      
+		writer=new BufferedWriter(write);          
+		writer.write(info);   
+		writer.close();  
+		write.close();
+	}catch (Exception e) {
+		logger.error("addRecruit()--------------error",e);
+		if(writer!=null){
+			try {
+				writer.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		if(write!=null){
+			try {
+				write.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
+	}
+	return model;
+}
+
+<!--switch-->
+switch(表达式)
+{
+	case 常量表达式1:语句1;
+	....
+	case 常量表达式2:语句2;
+	default:语句;
+}
+
+<!--获取项目的相对路径-->
+request.getSession().getServletContext().getRealPath("/");
+
+<!--冒泡排序-->
+public static void main(String[] args) {
+	int[] arrays={7,6,5,4,3,2,1};
+	for(int i=0;i<arrays.length;i++){
+		for(int j=0;j<(arrays.length-i-1);j++){
+			if(arrays[j]>arrays[j+1]){
+				int a=arrays[j];
+				arrays[j]=arrays[j+1];
+				arrays[j+1]=a;
+			}
+		}
+		System.out.println("\n第"+(i+1)+"次排序的结果");
+		for(int k=0;k<arrays.length;k++){
+			System.out.print(" "+arrays[k]);
+		}
+	}
+	System.out.println("\n---------最终结果----------");
+	for(int k=0;k<arrays.length;k++){
+		System.out.print(" "+arrays[k]);
+	}
+}
+<!--循环map输出键值对-->
+public static void main(String[] args) {
+	Map<String,Object> m=new HashMap<>();
+	m.put("aa","11");
+	m.put("bb","22");
+	m.put("cc","33");
+	Iterator<?> i=m.entrySet().iterator();
+	while(i.hasNext()){//只遍历一次,速度快
+		@SuppressWarnings("rawtypes")
+		Map.Entry e=(Map.Entry)i.next();
+		System.out.println(e.getKey().toString());
+		System.out.println(e.getValue().toString());
+	}
+}
+ /**
+ * 绑定时检查第三方参数是否正确
+ * @param request
+ * @return
+ */
+private boolean checkParam(HttpServletRequest request){
+	Enumeration<String> ens =request.getParameterNames();
+	String flag="";
+	String keys="";
+	while (ens.hasMoreElements()){
+		String name=ens.nextElement();
+		if(!name.equals("flag")){
+			String value=request.getParameter(name);
+			keys+=name+"|"+value+"|";
+		}else{
+			flag=request.getParameter(name);
+		}
+	}
+	keys=MD5.getMD5(keys);
+	if(flag.equals(keys)){
+		return true;
+	}else{
+		return false;
+	}
+}
+<!--
+为了防止用户刷新重复提交，save操作之后一般会redirect到另一个页面，同时带点操作成功的提示信息。
+因为是Redirect，Request里的attribute不会传递过去，如果放在session中，则需要在显示后及时清理，
+不然下面每一页都带着这个信息也不对。Spring在3.1才提供了这个能力。-->
+public String save(@ModelAttribute("group") Group group, RedirectAttributes redirectAttributes) {
+	accountManager.saveGroup(group);
+	redirectAttributes.addFlashAttribute("message", "修改权限组成功");
+	return "redirect:/account/group/";
+}
+
+Random random = new Random();
+random.nextInt(26);//nextInt(n)将返回一个大于等于0小于n的随机数，即：0 <= nextInt(n) < n。
+
+StringBuffer buf = new StringBuffer(valueStr);
+buf.insert(offset, key);//字符串随机插入
+
+
+<!--（如何）从数组创建ArrayList-->
+我有一个数组，初始化如下：
+Element[] array = {new Element(1), new Element(2), new Element(3)};
+我希望将这个数组转化成一个ArrayList类的对象。
+
+解决方案
+new ArrayList<Element>(Arrays.asList(array))
+<!------------------------------>
+
+File.separator 
+与系统有关的默认名称分隔符。此字段被初始化为包含系统属性 file.separator 值的第一个字符。在 UNIX 系统上，此字段的值为 '/'；在 Microsoft Windows 系统上，它为 '\'。

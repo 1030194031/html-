@@ -1,0 +1,34 @@
+Mybaits 大于小于号需要转译<![CDATA[id < #{id}  ]]>
+
+<!--MyBatis子查询-->
+<resultMap type="LineCourse" id="LineCourseResult">
+		<result property="courseId" column="COURSE_ID"/>
+		<result property="courseName" column="COURSE_NAME"/>
+		<result property="subjectId" column="SUBJECT_ID"/>
+		<collection property="teacherList" column="COURSE_ID" javaType="java.util.List" select="LineCourseMapper.queryCourseTeacherList"/>
+</resultMap>
+
+<select id="queryCourseTeacherList" parameterType="long" resultType="java.util.Map">
+	SELECT EDU_TEACHER.ID as teacherId,EDU_TEACHER.NAME as teacherName FROM LINE_COURSE_TEACHER 
+	LEFT JOIN EDU_TEACHER ON EDU_TEACHER.ID = LINE_COURSE_TEACHER.TEACHER_ID
+	WHERE LINE_COURSE_TEACHER.COURSE_ID=#{value}
+</select>
+<!--模糊查询-->
+and user_expand.realname like concat('%',#{e.realname},'%')
+<!--批量添加-->
+<insert id="createCourseKpointAtlas" parameterType="list" >
+	insert into edu_course_kpoint_atlas (
+	<include refid="edu_course_kpoint_atlas_columns" />
+	) values
+	<foreach collection="list" item="item" index="index" separator="," >
+		(#{item.id},#{item.kpointId},#{item.url})
+	</foreach>
+</insert>
+<update id="deleteCourseKpointByIdBatch">
+		update edu_course_kpoint set status = 1
+		WHERE
+		id in
+		<foreach collection="array" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</update>

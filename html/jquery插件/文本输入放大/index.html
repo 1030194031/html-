@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>JS 仿支付宝input文本输入框放大组件</title>
+  <script src="js/jquery.min.js"></script>
+  <style>
+	 .js-max-input {height:30px; border: solid 1px #ffd2b2; position:relative;background: #fffae5;padding: 10px 10px 0 10px;font-size:20px;color: #ff4400}
+  </style>
+ </head>
+ <body>
+	<div class="parentCls">
+		<input type="text" class="inputElem4" autocomplete = "off" maxlength="18"/>
+	</div>
+
+	 <script src="js/jq22.js"></script>
+	 <script>
+		 // 初始化
+		 $(function(){
+			
+			new TextMagnifier({
+				inputElem: '.inputElem4',
+				align: 'bottom',
+				splitType: [6,4,4,4]
+			});
+		 });
+		 	
+	 </script>
+ </body>
+</html>

@@ -1,0 +1,65 @@
+<!--获取缓存中用户的信息-->
+String sid = WebUtils.getCookie(request, CommonConstants.USER_SINGEL_ID);
+	if (StringUtils.isNotEmpty(sid)) {
+	Object  ob =   memCache.get(sid);
+	if(ObjectUtils.isNotNull(ob)){
+		JsonObject user=  jsonParser.parse(ob.toString()).getAsJsonObject();
+		mobile=user.get("mobile").toString();
+	}
+}
+
+<!--更新用户缓存中的信息-->
+JsonObject userJsonObject = SingletonLoginUtils.getLoginUser(request);
+userJsonObject.addProperty("nickname", queryUser.getNickname());
+userJsonObject.addProperty("realname", queryUser.getRealname());
+userJsonObject.addProperty("gender", queryUser.getGender());
+String sid = WebUtils.getCookie(request, CommonConstants.USER_SINGEL_ID);
+memCache.set(sid, userJsonObject.toString(), MemConstans.USER_TIME);
+
+<!--后台搜索条件页面布局-->
+<caption>
+	<div class="capHead">
+		<div class="fl">
+			<ul class="ddBar">
+				<li>
+					<span class="ddTitle"><font>学员ID：</font></span>
+					<input type="text" name="user.id" value="${user.id}" id="userId" />
+				</li>
+				<li>
+					<span class="ddTitle"><font>注册开始日期：</font></span>
+					<input type="text" name="user.startDate" value="${user.startDate}"  id="startDate" class="AS-inp"/>
+				</li>
+				<li>
+					<span class="ddTitle"><font>手机号：</font></span>
+					<input type="text" name="user.mobile" value="${user.mobile}" id="mobile" />
+				</li>
+				 <li style="text-align: center;">
+					<input type="button"  class="btn btn-danger" value="查询" name="" onclick="submitSearch()"/>
+					<input type="button"  class="btn btn-danger" value="清空" name="" onclick="clean()"/>
+				</li>
+			</ul>
+		</div>
+		<div class="fl">
+			<ul class="ddBar">
+				<li>
+					<span class="ddTitle"><font>邮箱：</font></span>
+					<input type="text" name="user.email" value="${user.email}" id="useremail" />
+				</li>
+				<li>
+					<span class="ddTitle"><font>注册结束日期：</font></span>
+					<input type="text" name="user.endDate" value="${user.endDate}"  id="endDate" class="AS-inp"/>
+				</li>
+				<li>
+					<span class="ddTitle"><font>课程名称：</font></span>
+					<input type="text" name="user.courseName" value="${user.courseName}" id="courseName" />
+					
+					<!-- <input type="button"  class="btn btn-danger" value="导出Excel" name="" onclick="userExcel()"/> -->
+				</li>
+			   
+			</ul>
+
+		</div>
+		<div class="clearfix"></div>
+	</div>
+</caption>
+

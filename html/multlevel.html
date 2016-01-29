@@ -1,0 +1,61 @@
+<!--自定义-->
+var subjectList = eval('('+'${allSubjectList}'+')');
+var param={
+		data:subjectList,	//处理的数据（必选）数据格式：[{object Object},{object Object}] 
+		idKey:'subjectId',//数据的ID（必选）
+		pidKey:'parentId',//数据的父ID（必选）
+		nameKey:'subjectName',//数据显示的名（必选）
+		initVal:'${queryLineCourse.subjectId}',//初始默认ID（可选）
+		callback: callFun 
+}
+ML._manual(param);
+
+function callFun(nodes,linkNodes,node){
+	var subjectId = '${queryLineCourse.subjectId}';
+	var context='';
+	for(var i=0;i<nodes.length;i++){
+		context+='<dl class="oc-sort-ul">';
+		if(i==0){
+			context+='<dt><strong class="c-666 fsize14">课程分类:</strong></dt><dd>';
+			context+='<a title="全部" class="current_0" onclick="setSubjectData(0)" href="javascript:void(0)">全部</a> |';
+		}else{
+			context+='<dt><strong class="c-666 fsize14">'+linkNodes[i-1].subjectName+':</strong></dt><dd>';
+		}
+		for(var j=0;j<nodes[i].length;j++){
+			if((j+1)==nodes[i].length){
+				context+='<a class="current_'+nodes[i][j].subjectId+'" title="'+nodes[i][j].subjectName+'" onclick="setSubjectData('+nodes[i][j].subjectId+')" href="javascript:void(0)">'+nodes[i][j].subjectName+'</a>';
+			}else{
+				context+='<a class="current_'+nodes[i][j].subjectId+'" title="'+nodes[i][j].subjectName+'" onclick="setSubjectData('+nodes[i][j].subjectId+')" href="javascript:void(0)">'+nodes[i][j].subjectName+'</a> |';
+			}
+		}
+		context+='</dd></dl>';
+	}
+	$(context).insertBefore("#subjectData");
+	
+	if(linkNodes!=null && linkNodes.length>0){
+		for(var i=0;i<linkNodes.length;i++){
+			$(".current_"+linkNodes[i].subjectId).addClass('current');
+		}
+	}else{
+		$(".current_0").addClass('current');
+	}
+	$("."+'${queryLineCourse.time}').addClass('current');
+}
+
+<!--后台下拉框-->
+var param={
+		data: eval('('+'${subjectList}'+')'),	//处理的数据（必选）数据格式：[{object Object},{object Object}] 
+		showId:'showSubjectList',//显示的数据标签ID（必选）
+		idKey:'subjectId',//数据的ID（必选）
+		pidKey:'parentId',//数据的父ID（必选）
+		nameKey:'subjectName',//数据显示的名（必选）
+		returnElement:'subjectId',//返回选中的值（必选 ）
+		majorId:'',//科目id
+		//-----------------------------------------------------
+		returnIds:'subjectLink',//返回所有级的ID，以“,”隔开（可选）
+		initVal:'${queryCourse.subjectId}',//初始默认ID（可选）
+		defName:'请选择',//默认显示的选项名（可选，如果不设置默认显示“请选择”）
+		defValue:'0'//默认的选项值（可选，如果不设置默认是“0”）
+	};
+ML._init(param);
+	

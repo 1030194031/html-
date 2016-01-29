@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>二维码生成</title>
+<script src="jquery-1.9.1.js"></script>
+<script src="jquery.qrcode.min.js"></script>
+
+<script>
+
+/**
+ * 二维码生成
+ */
+function clesWin(){
+	$("#wx-bd-win").hide();
+}
+function wxShare(ev,urls){
+	var oEvent=ev||event;
+	var oTop=oEvent.clientY;
+	var clientHeight = document.documentElement.scrollTop;
+	var _top = (clientHeight+oTop)/4;
+	$("#wx-bd-win").css('top',_top);
+	var str = toUtf8(urls);
+	$("#bd_weixin_popup").html('');
+	$("#bd_weixin_popup").qrcode({
+		render:'canvas',
+		text:str,
+		type:'cn',
+		width:200,
+		height:200
+	});
+	$("#wx-bd-win").show();
+}
+
+function toUtf8(str) {
+	var out, i, len, c;
+	out = "";
+	len = str.length;
+	for(i = 0; i < len; i++) {
+		c = str.charCodeAt(i);
+		if ((c >= 0x0001) && (c <= 0x007F)) {
+			out += str.charAt(i);
+		} else if (c > 0x07FF) {
+			out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
+			out += String.fromCharCode(0x80 | ((c >>  6) & 0x3F));
+			out += String.fromCharCode(0x80 | ((c >>  0) & 0x3F));
+		} else {
+			out += String.fromCharCode(0xC0 | ((c >>  6) & 0x1F));
+			out += String.fromCharCode(0x80 | ((c >>  0) & 0x3F));
+		}
+	}
+	return out;
+}
+</script>
+</head>
+<body>
+<a href="javascript:void(0)" onclick="wxShare(event,'http://www.baidu.com')">生成二维码</a>
+
+
+<div id="wx-bd-win" style="height: 275px;left: 700.5px;top: 629.5px;width: 240px;border: 1px solid #d8d8d8;font-size: 12px;padding:10px;position:absolute;background:none repeat scroll 0 0 #fff;z-index:100001;display: none;">
+	<div>
+	<span style="text-align: left;">分享到微信朋友圈</span>
+	<a href="javascript:void(0)" onclick="clesWin()" style="float: right;font-weight:bold;">×</a></div>
+	<div id="bd_weixin_popup" style="text-align: center;">
+
+	</div>
+	<div class="bd_weixin_popup_foot">
+		打开微信，点击底部的“发现”，<br>使用“扫一扫”即可将网页分享至朋友圈。
+	</div>
+</div>
+</body>
+</html>

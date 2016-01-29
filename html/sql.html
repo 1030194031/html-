@@ -1,0 +1,33 @@
+<!-- 查询时间是否冲突 -->
+<select id="queryConflictTime" parameterType="CourseKpoints" resultType="int">
+	select count(1) from edu_course_kpoints
+	where ((date_add(#{beginTime},  interval -1 second)>=begin_time and end_time>=date_add(#{beginTime},  interval 1 second)) 
+			or
+	(date_add( #{endTime},  interval -1 second)>=begin_time and end_time>=date_add( #{endTime},  interval 1 second))
+		or
+	(<![CDATA[#{beginTime}<=begin_time and end_time<=#{endTime} ]]>)
+	)
+</select>
+<!--sql去重字段查询-->
+group_concat(distinct sys_subject.subject_name) as subjects
+<!--查询某月每天的数据量-->
+select count(*),DATE_FORMAT(add_time,'%e') as e from line_course_subject 
+where DATE_FORMAT(add_time,'%m')='04'
+group by e
+<!--需要两次关联同一个表的处理-->
+select 
+	edu_trxorder.id, 
+	edu_trxorder.teacher_id, 
+	users.realname as nickname,
+	user_user.mobile,
+	edu_trxorder.course_name,
+	edu_trxorder.lession_num,
+	teachers.realname as teacherName
+	from edu_trxorder
+	left join user_expand as users on users.user_id=edu_trxorder.user_id
+    left join user_user on users.user_id = user_user.id
+	left join edu_teacher on edu_teacher.id=edu_trxorder.teacher_id
+    left join user_expand as teachers on teachers.user_id=edu_teacher.user_id
+	where 1=1 and trx_status='SUCCESS'
+<!--查询时间最小的-->
+SELECT min(begin_time) FROM edu_course_kpoints WHERE course_id=141	

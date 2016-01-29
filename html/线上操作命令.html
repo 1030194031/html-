@@ -1,0 +1,104 @@
+linux命令
+<!--
+
+ll 列出当前目录 
+cp afile afile.bak 把文件复制为新文件afile.bak
+cp afile /home/bible/ 把文件afile从当前目录复制到/home/bible/目录下
+cp -rf  aa bb 把目录aa复制bb
+mv aflie bfile 将afile重命名为bfile
+mv afile /tmp 把当前目录下的afile移动到/tmp/目录下
+rm afile 删除文件afile
+rm -rf domed 删除domed目录以及它所包含的所有内容
+mkdir phots 在当前目录中建立名为photos的目录
+mkdir -p this/that/theother 在当前目录下建立指定的嵌套子目录
+mkdir 将删除空目录
+rz -y 上传
+sz 1.zip 下载1.zip 
+tail -f /opt/tomcat_1/logs/catalina.out 查看线上的日志
+tomcat1.sh  tomcat重启
+复制命令：Ctrl + Insert  组合键　　或　　用鼠标选中即是复制。
+粘贴命令：Shift + Insert  组合键　　或　　单击鼠标滚轮即为粘贴。
+
+unzip 文件名.zip 解压
+zip -r 文件名.zip  文件目录名  线上压缩文件目录
+
+2.关闭memcache
+ps aux | grep mem | grep -v grep | awk '{print $2}' | xargs kill -9
+
+3.启动memcache
+/opt/memcached/bin/memcached -d -m 1024 -u root -p 【12000(好像是端口号  可用ps -ef|grep memcached 命令查看memcached获取运行状态)】  
+
+打包上传文件时，classess目录下会生成com文件夹  删除不上传
+-->
+
+mysql 命令
+<!--
+
+线上导出数据库
+mysqldump --opt --skip-lock-tables -u[数据库用户名] -p[数据库密码] -h [数据库链接] [数据库名] > [文件名].sql 
+mysqldump --opt --skip-lock-tables -uadmin268xue -padmin268xue -h rdsroousjwkgavsfrdu05.mysql.rds.aliyuncs.com  cms_268xue > cms_268xue.sql
+
+
+
+show databases; 显示所有的数据库
+show tables; 显示数据库列表
+use 【表名】; 打开数据库
+describe 【表名】; 显示数据表的结构
+
+set names utf8 解决乱码
+
+删库和删表: 
+drop database 【库名】; 
+drop table 【表名】；
+
+将表中记录清空： 
+delete from 【表名】; 
+
+mysql -u root -p root springmvc  < 1.sql
+mysqldump -u root -p
+
+导入sql的命令行如下：
+source 【文件路径名】
+
+1、连接到本机上的MYSQL。
+首先打开DOS窗口，然后进入目录mysql\bin，再键入命令mysql -u root -p，回车后提示你输密码.注意用户名前可以有空格也可以没有空格，但是密码前必须没有空格，否则让你重新输入密码。
+
+如果刚安装好MYSQL，超级用户root是没有密码的，故直接回车即可进入到MYSQL中了，MYSQL的提示符是： mysql>
+
+2、连接到远程主机上的MYSQL。假设远程主机的IP为：110.110.110.110，用户名为root,密码为abcd123。则键入以下命令：
+    mysql -h110.110.110.110 -u root -p 123;（注:u与root之间可以不用加空格，其它也一样）
+
+3、退出MYSQL命令： exit （回车）
+
+
+sudo su - 切换权限
+
+/opt/mysql/bin/mysql -uroot -pTest2015  登陆数据库
+set names utf8;设置字符集
+use dataBase;使用数据库
+
+
+/*添加表字段*/
+alter table 【表名】 add 【字段名】 【类型】;
+alter table edu_course add sort int(11);
+
+
+/*修改表字段*/
+alter table 【表名】 modify column 【字段名】 【类型】;
+alter table edu_course modify column sourcePrice decimal(10,2);
+
+
+/*删除表字段*/
+alter table 【表名】 drop column 【字段名】
+
+/*导出线上数据库*/
+mysqldump --opt --skip-lock-tables -uadmin268xue -padmin268xue -h192.168.1.10 数据库名 > aa.sql
+sz aa.sql
+
+/*导入线上数据库到线下*/
+rz -y
+mysql -uadmin268xue -padmin268xue  -h192.168.1.10 demo_cms_v1.0 < aa.sql
+
+/*远程导入数据库*/
+mysql -uadmin268xue -padmin268xue -hrdsl17ylf41cbkx15mn6g.mysql.rds.aliyuncs.com sns_268xue < 1.sql
+-->

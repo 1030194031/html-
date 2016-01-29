@@ -1,0 +1,265 @@
+js获取前一个页面的url
+document.referrer;
+
+<!--富文本编辑器-->
+<link rel="stylesheet" type="text/css" href="${ctximg}/kindeditor/themes/default/default.css" />
+<script type="text/javascript" src="${ctximg}/kindeditor/kindeditor-all.js"></script>
+<script type="text/javascript">
+	$(function(){
+		initKindEditor('courseContent','576px','400px');//添加页面编辑器
+	});
+	//添加页面编辑器
+	function initKindEditor(id, width, height) {
+		EditorObject = KindEditor.create('textarea[id=' + id + ']', {
+			resizeType : 1,
+			filterMode : false,// true时过滤HTML代码，false时允许输入任何代码。
+			allowPreviewEmoticons : false,
+			allowUpload : true,// 允许上传
+			urlType : 'domain',// absolute
+			newlineTag : 'br',// 回车换行br|p
+			width : width,
+			height : height,
+			minWidth : '10px',
+			minHeight : '10px',
+			uploadJson : '<%=keImageUploadUrl%>' + '&param=article',// 图片上传路径
+			afterBlur : function() {
+				this.sync();
+			},
+			allowFileManager : false,
+			items : [ 'source','fontname', 'fontsize', '|', 'forecolor', 'hilitecolor',
+					'bold', 'italic', 'underline','formatblock','lineheight', 'removeformat', '|',
+					'justifyleft', 'justifycenter', 'justifyright',
+					'insertorderedlist', 'insertunorderedlist', '|', 'emoticons',
+					'image', 'link','plainpaste' ]
+		});
+	}
+</script>
+EditorObject.html("123123");
+
+<!--上传插件-->
+<script type="text/javascript" src="${ctximg}/static/common/uploadify/swfobject.js"></script>
+<script type="text/javascript" src="${ctximg}/static/common/uploadify/jquery.uploadify.v2.1.4.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		uploadPicLoad('fileupload','imgs','imgUrl','fileQueue');
+	});
+	//上传控件加载
+	function uploadPicLoad(fileupload,ids,showId,fileQueue){
+		$("#"+fileupload).uploadify({
+			'uploader' : '/static/common/uploadify/uploadify.swf', //上传控件的主体文件，flash控件  默认值='uploadify.swf'
+			'script'  :'<%=uploadSwfUrl%>',  
+			'scriptData':{"base":"mavendemo","param":""},
+			'queueID' : fileQueue, //文件队列ID
+			'fileDataName' : 'fileupload', //您的文件在上传服务器脚本阵列的名称
+			'auto' : true, //选定文件后是否自动上传
+			'multi' :false, //是否允许同时上传多文件
+			'hideButton' : false,//上传按钮的隐藏
+			'buttonText' : 'Browse',//默认按钮的名字
+			'buttonImg' : '/static/common/uploadify/liulan.png',//使用图片按钮，设定图片的路径即可
+			'width' : 105,
+			'simUploadLimit' : 3,//多文件上传时，同时上传文件数目限制
+			'sizeLimit' : 51200000,//控制上传文件的大小
+			'queueSizeLimit' : 3,//限制在一次队列中的次数（可选定几个文件）
+			'fileDesc' : '支持格式:jpg/gif/jpeg/png/bmp.',//出现在上传对话框中的文件类型描述
+			'fileExt' : '*.jpg;*.gif;*.jpeg;*.png;*.bmp',//支持的格式，启用本项时需同时声明fileDesc
+			'folder' : '/upload',//您想将文件保存到的路径
+			'cancelImg' : '/static/common/uploadify/cancel.png',
+			onSelect : function(event, queueID,fileObj) {
+				fileuploadIndex = 1;
+				$("#"+fileQueue).html("");
+				if (fileObj.size > 51200000) {
+					alert('文件太大最大限制51200kb');
+					return false;
+				}
+			},
+			onComplete : function(event,queueID, fileObj, response,data) {
+				$("#"+ids).val(response);
+				$("#"+showId).attr('src','<%=staticImageServer%>'+response);
+			},
+			onError : function(event, queueID, fileObj,errorObj) {
+				$("#"+fileQueue).html("<br/><font color='red'>"+ fileObj.name + "上传失败</font>");
+			}
+		});
+	}
+</script>
+<tr>
+	<td align="center"><font color="red">*</font>&nbsp;课程图片(400*300)</td>
+	<td>
+		<input type="file" id="fileupload" class="vam" />
+		<font color="red vam ml10">请上传宽400、高300的图片</font> 
+		<div class="ml10 mt10"> 
+			<img id="imgUrl" src="/static/edu/images/default/uploadDefaultPic.jpg" alt="" width="400" height="300"/>
+			<br/>上传头像地址：<input id="imgs" type="text"/>
+		</div>
+		<div id="fileQueue" class="mt10"></div> 
+	</td>
+</tr>
+
+	
+<!-- ajax模板 -->		
+$.ajax({
+	url:"url",
+	data:{"key":value},
+	type:"post",
+	dataType:"json",
+	cache : false,
+	async:false,
+	success:function(result){
+	}
+});
+<!-- ajax提交表单 -->
+$('form').serialize()
+
+<!--文本框只能输入数字-->
+onkeyup="this.value=this.value.replace(/\D/g,'')" 
+this.value=this.value.replace(/[^0-5]{1}/g,'')
+<!--文本框只能输入数字或小数-->
+onkeyup="this.value=value.replace(/[^\d\.]/g,'')"
+<!--文本框只能输入金钱格式-->
+function onlyNumber(input, n) {
+	input.value = input.value.replace(/[^0-9\.]/ig, '');
+	var dotIdx = input.value.indexOf('.'), dotLeft, dotRight;
+	if (dotIdx >= 0) {
+		dotLeft = input.value.substring(0, dotIdx);
+		dotRight = input.value.substring(dotIdx + 1);
+		if (dotRight.length > n) {
+			dotRight = dotRight.substring(0, n);
+		}
+		input.value = dotLeft + '.' + dotRight;
+	}
+}
+<!--只能输入0-99之间的整数-->
+function onlyFromts(obj){
+	var number = obj.value;
+	var number2 = parseInt(number);
+	if((/^[0-9]+$/).test(number) && number2>=1 && number2<=100){
+		 return;
+	}
+	else{
+		 if(number==0){
+			 obj.value = 1;
+		 }else{
+			 obj.value = number.substring(0,number.length-1);
+		 }
+	}
+}
+<!--只能输入0~9.99折-->
+function onlycountFromt(input,n){
+	var number = input.value;
+	var number2 = parseInt(number);
+	if((/^[.0-9]+$/).test(number) && number2>=0 && number2<10){
+		var dotIdx = number.indexOf('.'), dotLeft, dotRight;
+		if (dotIdx >= 0) {
+			dotLeft = input.value.substring(0, dotIdx);
+			dotRight = input.value.substring(dotIdx + 1);
+			if (dotRight.length > n) {
+				dotRight = dotRight.substring(0, n);
+			}
+			input.value = dotLeft + '.' + dotRight;
+		}
+		return;
+	}
+	else{
+		 input.value = number.substring(0,number.length-1);
+	}
+}
+<!--仅输入文字-->
+<input type="text" onkeyup="value=value.replace(/[^\d]/g,'')" name="queryCourse.id" value="${course.id}" id="id" />
+
+<!--字数显示-->
+${fn:substring(sty.details, 0, 180)}
+<c:choose>  
+	<c:when test="${fn:length(lineCourse.summary) > 210}">  
+		<c:out value="${fn:substring(lineCourse.summary, 0, 210)}..." />  
+	</c:when>  mao
+	<c:otherwise>  
+		<c:out value="${lineCourse.summary}" />  
+	</c:otherwise>  
+</c:choose>   
+	
+<!--Css控制字数的显示-->
+height: 93px;overflow: hidden;text-overflow: ellipsis;
+
+<!--文本框内提示-->
+<textarea id="content" class="changesClass" name="userFeedback.content" style="width: 94%" onkeyup="enterSubmit(event,'getSearch()')" placeholder="输入你的报名信息：姓名，手机号码，邮箱。例如：小王，123456789，123456@qq.com"></textarea>
+
+<!--锚点定位-->
+1.
+document.getElementById('position').scrollIntoView();
+2.
+/front/showcoulist#position
+3.
+//带滑动效果的定位
+var pos = $("#"+id).offset().top;
+$("html,body").animate({scrollTop: pos}, 1000);
+
+<!--文本框回车提交-->
+onkeyup="enters(event)"
+function enters(event){
+	if(event.keyCode==13){//13 回车键
+	  loginSubmit();
+	}
+}
+
+<!--json全选所有的收藏-->
+function allselect(cb) {
+	$("input[class='chekbox']").prop('checked', cb.checked);
+}
+<!--checkbox判断是否选中-->
+$(".chekbox").each(function(){
+	if($(this).prop("checked")){
+		str+=this.value+",";
+		checked=false;
+	}
+});
+<!--获取选中单选框的个数-->
+$("input[type='checkbox']:checked").length
+<!--网站导航定位-->
+$(function(){
+	var url=window.document.location.pathname;
+	$("a[href$='"+url+"']").parent().addClass("current");
+});
+<!--弹窗-->
+window.open('/admin/appWebsite/CourseList?page.currentPage=1',
+                +'newwindow', 'toolbar=no,scrollbars=yes,location=no,resizable=no,top=150,left=300,width=923,height=802'
+        );
+<!--返回父窗口并调用父窗口addCourse方法-->
+window.opener.addCourse(ids,name);
+
+//删除学员
+	function delUser(id){
+		var tcIds = $("#tcIds").val();
+		tcIds=","+tcIds+",";
+		var pattern =","+id+",";
+		tcIds = tcIds.replace(new RegExp(pattern), ",");
+		tcIds = tcIds.split(",").unique();
+		$("#tcIds").val(tcIds);
+		queryuser();
+	}
+
+<!--根据url添加样式-->
+var url=window.document.location.pathname;
+$("a[href$='"+url+"']").parent().addClass("current");//$以url为结尾的
+
+
+<!--错误提示消除-->
+function gohsData(id){
+	$("#"+id).html('');
+}
+
+onkeyup="gohsData('nameError')"
+<!--倒计时-->
+function remainTime(){
+	index--;
+	$("#sendRand").html('重新获取验证码('+index+')');
+	if(index<=0){
+		$("#sendRand").html('点击获取验证码');
+		$("#sendRand").attr("onclick","sendMobile()");
+		clearInterval(emailinter);
+		index=60;
+	}
+}
+
+$("#sendRand").removeAttr("onclick");
+index=60;
+emailinter = setInterval("remainTime()",1000);

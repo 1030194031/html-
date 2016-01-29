@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+	<title>datepicker</title>
+	<link rel="stylesheet" type="text/css" href="jquery-ui-1.10.4/css/ui-lightness/jquery-ui-1.10.4.custom.css"/>
+	<script type="text/javascript" src="../jquery-1.9.1.js"></script>
+	<script type="text/javascript" src="jquery-ui-1.10.4/js/jquery-ui-1.10.4.custom.js"></script>
+	<script type="text/javascript" src="jquery-ui-1.10.4/js/jquery.ui.datepicker-zh-CN.js"></script>
+	<script type="text/javascript" src="jquery-ui-1.10.4/js/jquery-ui-timepicker-addon.js"></script>
+	<script type="text/javascript" src="jquery-ui-1.10.4/js/jquery-ui-timepicker-zh-CN.js"></script>
+	<script type="text/javascript">
+		var date = new Date();
+		var nowTime=formatDate(date,'yyyy-MM-dd hh:mm:ss');
+		$(function(){
+			datetimeInit();
+			timeInit();
+		});
+		//时间选择
+		function datetimeInit(){
+			$("#beginTime").val(nowTime);
+			$("#endTime").val(nowTime);
+			//datepicker  不显示时分秒
+			$( "#beginTime").datetimepicker(
+				{regional:"zh-CN",
+				changeYear: true, //选择年
+				changeMonth: true,//选择月
+				dateFormat : "yy-mm-dd",//日期格式
+				timeFormat : 'HH:mm:ss',//时间格式
+				minDate:nowTime,//最小的日期
+				minDateTime:new Date(nowTime.replace(/-/ig,'/')),//最小的时间（必须与minDate一块用才年月日才是最小的）
+				onSelect: function(dateText, inst) {
+					//控制结束时间选择的最小时间
+					$('#endTime').datetimepicker('option', 'minDateTime', new Date(dateText.replace(/-/ig,'/')));}
+			});
+			$( "#endTime").datetimepicker(
+				{regional:"zh-CN",
+				changeYear: true, //选择年
+				changeMonth: true,//选择月
+				dateFormat : "yy-mm-dd",//日期格式
+				timeFormat : 'HH:mm:ss',//时间格式
+				minDate:nowTime,//最小的日期
+				minDateTime:new Date(nowTime.replace(/-/ig,'/')),//最小的时间（必须与minDate一块用才年月日才是最小的）
+				onSelect: function(dateText, inst) {
+					//控制开始时间选择的最大时间
+					$('#beginTime').datetimepicker('option', 'maxDateTime', new Date(dateText.replace(/-/ig,'/')));}
+			});
+		}
+		//时分秒选择
+		function timeInit(){
+			$("#time").val(formatDate(date,'hh:mm:ss'));
+			$( "#time").timepicker(
+				{regional:"zh-CN",
+				timeFormat : 'HH:mm:ss',//时间格式
+				minDateTime:new Date(nowTime),//最小的时间
+			});
+		}
+		
+		//格式化时间
+		function formatDate(date,format){
+			var o = { 
+				"M+" : date.getMonth()+1, //month 
+				"d+" : date.getDate(), //day 
+				"h+" : date.getHours(), //hour 
+				"m+" : date.getMinutes(), //minute 
+				"s+" : date.getSeconds(), //second 
+				"q+" : Math.floor((date.getMonth()+3)/3), //quarter 
+				"S" : date.getMilliseconds() //millisecond 
+			} 
+
+			if(/(y+)/.test(format)) { 
+				format = format.replace(RegExp.$1, (date.getFullYear()+"").substr(4 - RegExp.$1.length)); 
+			} 
+
+			for(var k in o) { 
+				if(new RegExp("("+ k +")").test(format)) { 
+					format = format.replace(RegExp.$1, RegExp.$1.length==1 ? o[k] : ("00"+ o[k]).substr((""+ o[k]).length)); 
+				} 
+			} 
+			return format; 
+		} 
+	</script>
+</head>
+<body>
+	时间选择:
+	<input type="text"  readonly="readonly"  id="beginTime"/>
+	<input type="text"  readonly="readonly"  id="endTime"/><br/>
+	时分秒选择:
+	<input type="text"  readonly="readonly"  id="time"/>
+<!--datetimepicker
+	controlType:'select', 下拉选择时间
+	changeYear: true,  选择年
+    changeMonth: true,  选择月
+	showHour:false禁用小时 
+	showMinute:false禁用分钟 
+	showSecond:false 禁用秒
+	showMillisec: true 显示毫秒
+	hourMin: 6  小时最小6点
+	只选择时间：('#example_2').timepicker();
+	设置时间可选范围：
+			$('#example_4').timepicker({
+			   ampm: true,
+			   hourMin: 8,
+			   hourMax: 16
+		   });
+	默认时间
+			$('#example_5').datetimepicker({
+			   hour: 13,
+			   minute: 15
+		   });
+	显示多月并设置可选日期范围：
+			$('#example_6').datetimepicker({
+			   numberOfMonths: 2,
+			   minDate: 0,
+			   maxDate: 30
+		   });
+	显示时间标尺 
+			$('#example_7').timepicker({
+			   hourGrid: 4,
+			   minuteGrid: 10
+		   });
+-->
+</body>
+</html>

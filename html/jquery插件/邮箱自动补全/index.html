@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>邮箱自动补全</title>
+	<style type="text/css">
+		.out_box{border:1px solid #ccc; background:#fff; font:12px/20px Tahoma;}
+		.list_box{border-bottom:1px solid #eee; padding:0 5px; cursor:pointer;}
+		.focus_box{background:#f0f3f9;}
+		.mark_box{color:#c00;}
+	</style>
+	<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="jquery.mailAutoComplete-3.1.js"></script>
+	<script type="text/javascript">
+		$(function(){
+				$("#customTest").mailAutoComplete({
+				    boxClass: "out_box", //外部box样式
+				    listClass: "list_box", //默认的列表样式
+				    focusClass: "focus_box", //列表选样式中
+				    markCalss: "mark_box", //高亮样式
+				    autoClass: false,
+				    textHint: true, //提示文字自动隐藏
+				    hintText: "请输入邮箱地址"
+				});
+			});
+	</script>
+</head>
+<body>
+<input type="text" id="customTest" name="" value="">
+</body>
+</html>
