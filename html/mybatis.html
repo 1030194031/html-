@@ -25,10 +25,10 @@ and user_expand.realname like concat('%',#{e.realname},'%')
 	</foreach>
 </insert>
 <update id="deleteCourseKpointByIdBatch">
-		update edu_course_kpoint set status = 1
-		WHERE
-		id in
-		<foreach collection="array" item="item" open="(" close=")" separator=",">
-			#{item}
-		</foreach>
-	</update>
+	update edu_course_kpoint set status = 1
+	WHERE
+	id in
+	<foreach collection="array" item="item" open="(" close=")" separator=",">
+		#{item}
+	</foreach>
+</update>
